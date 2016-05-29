@@ -1,0 +1,27 @@
+{
+  "name": "falcor-server-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run build && node built/server/app.js",
+    "build": "babel -d built --presets es2015 src && browserify built/client/index.js -o built/bundle.js -d",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-cli": "^6.9.0",
+    "babel-preset-es2015": "^6.9.0",
+    "browserify": "^13.0.1"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.1",
+    "express": "^4.13.4",
+    "falcor": "^0.1.17",
+    "falcor-express": "^0.1.2",
+    "falcor-http-datasource": "^0.1.3",
+    "falcor-router": "^0.4.0"
+  }
+}
