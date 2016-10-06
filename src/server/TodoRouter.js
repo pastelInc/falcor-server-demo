@@ -1,6 +1,8 @@
 import {createClass} from 'falcor-router';
 import {TodoService} from './TodoService';
 
+const service = new TodoService();
+
 export class TodoRouter extends
 createClass([
   {
@@ -21,11 +23,10 @@ createClass([
       }));
     },
     set: function setTodoProperty(jsonGraph) {
-      console.log('set:', jsonGraph);
-
       const todoByIds = jsonGraph.todoByIds;
       const keys = Object.keys(todoByIds);
 
+      console.log('set:', jsonGraph);
       return Promise.all(keys.map(id => this.todoService.set(id, todoByIds[id])))
       .then(() => ({jsonGraph}))
       ;
@@ -49,20 +50,13 @@ createClass([
     get: function getTodosReferences(pathset) {
       console.log('get: ', pathset);
       return this.todoService.fetchList().then(list => {
-        return {
+         return {
           jsonGraph: {
-            // todos: pathset['indices'].filter(i => list[i]).map(i => {
-            //   return {$type: 'ref', value: ["todoByIds", list[i].id]};
-            // })
             todos: list.map(v => {
               return {$type: 'ref', value: ["todoByIds", v.id]};
             })
-            // todos: [
-            //   {$type: 'ref', value: ['todoByIds', 'todo1']},
-            //   {$type: 'ref', value: ['todoByIds', 'todo2']}
-            // ]
           }
-        }
+        };
       });
     }
   },
@@ -73,14 +67,14 @@ createClass([
       return this.todoService.add(args[0]).then(todo => {
         return this.todoService.fetchList().then(list => {
           return [
-          {
-            path: ['todos', 'length'],
-            value: list.length
-          },
-          {
-            path: ['todos', list.length - 1],
-            value: {$type: 'ref', value: ['todoByIds', todo.id]}
-          }
+            {
+              path: ['todos', 'length'],
+              value: list.length
+            },
+            {
+              path: ['todos', list.length - 1],
+              value: {$type: 'ref', value: ['todoByIds', todo.id]}
+            }
           ];
         });
       });
@@ -89,6 +83,6 @@ createClass([
 ]) {
   constructor() {
     super();
-    this.todoService = new TodoService();
+    this.todoService = service;
   }
 }
